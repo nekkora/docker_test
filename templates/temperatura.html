@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Temp{% endblock %}
+{% block title %}Temperatura{% endblock %}
 
 {% block styles %}
 {{ super() }}
@@ -12,24 +12,22 @@
   $(document).ready(function() {
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-    $('#publish').click(function(event) {
-      var topic = $('#topic').val();
-      var message = $('#message').val();
-      var qos = $('#qos').val();
-      var data = '{"topic": "' + topic + '", "message": "' + message + '", "qos": ' + qos + '}';
-      socket.emit('publish', data=data);
-    });
-
+      var topic = 'temp';
+      var qos = 0;
+      var data = '{"topic": "' + topic + '", "qos": ' + qos + '}';
+      socket.emit('subscribe', data=data);
+      $('#subscribe_topic').prop('readonly', true);
+/*
     $('#subscribe').click(function(event) {
-      var topic = $('#subscribe_topic').val();
-      var qos = $('#subscribe_qos').val();
+      var topic = 'temp';
+      var qos = 0;
       var data = '{"topic": "' + topic + '", "qos": ' + qos + '}';
       socket.emit('subscribe', data=data);
       $('#subscribe').hide();
       $('#unsubscribe').show();
       $('#subscribe_topic').prop('readonly', true);
     });
-
+*/
     $('#unsubscribe').click(function(event) {
       socket.emit('unsubscribe_all');
       $('#subscribe').show();
@@ -43,6 +41,7 @@
       var $textarea = $('#subscribe_messages');
       $textarea.val($textarea.val() + text + '\n');
     })
+
   });
 </script>
 {% endblock %}
@@ -50,10 +49,43 @@
 
 {% block content %}
 
-<input id="subscribe_topic" class="form-control">
-<button id="subscribe" class="btn btn-primary">Subscribe</button>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Subscribe MQTT Messages</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-xs-12">
+            <div class="row">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-xs-4">Topic:</label>
+                  <div class="col-xs-8">
+                    <input id="subscribe_topic" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-xs-8 col-xs-offset-4">
+                    <button id="subscribe" class="btn btn-primary">Subscribe</button>
+                    <button id="unsubscribe" class="btn btn-default" style="display: none;" >Unsubscribe</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-xs-4">Messages:</label>
+                  <div class="col-xs-8">
+                    <textarea id="subscribe_messages" class="form-control" rows=10></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<h3>Temp</h3>
-<textarea id="subscribe_messages" class="form-control" rows=10></textarea>
 
 {% endblock %}
