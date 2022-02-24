@@ -47,6 +47,22 @@ def temp():
 def teste():
     return render_template('teste.html')
 
+@app.route('/temp2')
+def temp2():
+    return render_template('temperatura2.html')
+
+@app.route('/sens1')
+def sens1():
+    return render_template('sensor1.html')
+
+@app.route('/sens2')
+def sens2():
+    return render_template('sensor2.html')
+
+@app.route('/sens3')
+def sens3():
+    return render_template('sensor3.html')
+
 @socketio.on('publish')
 def handle_publish(json_str):
     data = json.loads(json_str)
