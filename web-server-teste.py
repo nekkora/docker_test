@@ -24,61 +24,40 @@ app.config['MQTT_KEEPALIVE'] = 5
 app.config['MQTT_TLS_ENABLED'] = False
 app.config['MQTT_CLEAN_SESSION'] = True
 
-# Parameters for SSL enabled
-# app.config['MQTT_BROKER_PORT'] = 8883
-# app.config['MQTT_TLS_ENABLED'] = True
-# app.config['MQTT_TLS_INSECURE'] = True
-# app.config['MQTT_TLS_CA_CERTS'] = 'ca.crt'
-
 mqtt = Mqtt(app)
 socketio = SocketIO(app)
 bootstrap = Bootstrap(app)
-
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/temp')
+@app.route('/sala_teste')
 def temp():
-    return render_template('temperatura.html')
+    return render_template('sala_teste.html')
 
 @app.route('/teste')
 def teste():
     return render_template('teste.html')
 
-@app.route('/temp2')
-def temp2():
-    return render_template('temperatura2.html')
-
-@app.route('/sens1')
-def sens1():
-    return render_template('sensor1.html')
-
-@app.route('/sens2')
-def sens2():
-    return render_template('sensor2.html')
-
-@app.route('/sens3')
-def sens3():
-    return render_template('sensor3.html')
-
-@socketio.on('publish')
-def handle_publish(json_str):
-    data = json.loads(json_str)
-    mqtt.publish(data['topic'], data['message'])
-
+#@socketio.on('publish')
+#def handle_publish(json_str):
+#    data = json.loads(json_str)
+#    mqtt.publish(data['topic'], data['message'])
 
 @socketio.on('subscribe')
 def handle_subscribe(json_str):
     data = json.loads(json_str)
     mqtt.subscribe(data['topic'])
 
-
 @socketio.on('unsubscribe_all')
 def handle_unsubscribe_all():
     mqtt.unsubscribe_all()
 
+#@mqtt.on_topic('temp')
+#def handle_temp(client, user, message):
+#    pld=message.payload.decode()
+#    socketio.emit('mqtt_message_temp', pld=pld)
 
 @mqtt.on_message()
 def handle_mqtt_message(client, userdata, message):
@@ -97,5 +76,5 @@ def handle_logging(client, userdata, level, buf):
 if __name__ == '__main__':
     # important: Do not use reloader because this will create two Flask instances.
     # Flask-MQTT only supports running with one instance
-    socketio.run(app, host='0.0.0.0', port=5000, use_reloader=False, debug=False)
+    socketio.run(app, host='0.0.0.0', port=5000, use_reloader=False, debug=True)
 

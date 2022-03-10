@@ -1,0 +1,105 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Sala_teste{% endblock %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    function sub(tpc){
+      var topic = tpc;
+      var qos = 0;
+      var data = '{"topic": "' + topic + '", "qos": ' + qos + '}';
+      socket.emit('subscribe', data=data);
+      $('#subscribe_topic').prop('readonly', true);
+    }
+
+    sub("tempA");
+    sub("tempB");
+    sub("tempC");
+    sub("sensA");
+
+    socket.on('mqtt_message', function(data) {
+      console.log(data);
+      var text = data['payload'] + '; ' + data['topic'];
+      var text2 = data['payload'];
+
+/*
+      switch (text) {
+        case text.includes("tempA"):
+          document.getElementById("p1").innerHTML = text2
+          text = "";
+          text2 = "";
+          break;
+        case text.includes("tempB"):
+          document.getElementById("p2").innerHTML = text2
+          text = "";
+          text2 = "";
+        case text.includes("tempC"):
+          document.getElementById("p3").innerHTML = text2
+          text = "";
+          text2 = "";
+      }
+*/      
+      if (text.includes("tempA")) {
+        document.getElementById("p1").innerHTML = text2
+        text = "";
+        text2 = "";
+      } else if (text.includes("tempB")) {
+        document.getElementById("p2").innerHTML = text2
+        text = "";
+        text2 = "";
+      } else if (text.includes("tempC")) {
+        document.getElementById("p3").innerHTML = text2
+        text = "";
+        text2 = "";
+      } else if (text.includes("sensA")) {
+        var val = parseInt(text2);
+        if (val >= 20){
+          document.getElementById("p4").innerHTML = text2 + " ON"
+        } else {
+          document.getElementById("p4").innerHTML = text2 + " OFF"
+        }
+        text = "";
+        text2 = "";
+      }
+
+    })
+
+  });
+
+</script>
+{% endblock %}
+
+
+{% block content %}
+
+<h1>Sala teste</h1>
+<div>
+  <h2>Temperatura 1</h2>
+  <p id="p1">--</p>
+  <br>
+</div>
+<div>
+  <h2>Temperatura 2</h2>
+  <p id="p2">--</p>
+  <br>
+</div>
+<div>
+  <h2>Temperatura 3</h2>
+  <p id="p3">--</p>
+  <br>
+</div>
+<div>
+  <h2>Corrente 1</h2>
+  <p id="p4">--</p>
+</div>
+
+
+{% endblock %}
