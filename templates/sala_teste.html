@@ -30,23 +30,6 @@
       var text = data['payload'] + '; ' + data['topic'];
       var text2 = data['payload'];
 
-/*
-      switch (text) {
-        case text.includes("tempA"):
-          document.getElementById("p1").innerHTML = text2
-          text = "";
-          text2 = "";
-          break;
-        case text.includes("tempB"):
-          document.getElementById("p2").innerHTML = text2
-          text = "";
-          text2 = "";
-        case text.includes("tempC"):
-          document.getElementById("p3").innerHTML = text2
-          text = "";
-          text2 = "";
-      }
-*/      
       if (text.includes("tempA")) {
         document.getElementById("p1").innerHTML = text2
         text = "";
@@ -79,7 +62,7 @@
 
 
 {% block content %}
-
+<p><a href="/index">voltar</a></p>
 <h1>Sala teste</h1>
 <div>
   <h2>Temperatura 1</h2>
